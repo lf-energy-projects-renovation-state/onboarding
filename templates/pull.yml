@@ -1,0 +1,6 @@
+# Configuration for https://github.com/wei/pull
+version: "1"
+rules:
+  - base: ###UPSTREAM_DEFAULT_BRANCH###
+    upstream: ###OWNER###:###UPSTREAM_DEFAULT_BRANCH###
+    mergeMethod: hardreset

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":disableRateLimiting"
+  ],
+  "labels": ["dependencies"],
+  "vulnerabilityAlerts": {
+    "labels": ["security", "dependencies"],
+  },
+  "baseBranches": ["###UPSTREAM_DEFAULT_BRANCH###"],
+  "forkProcessing": "enabled"
+}
