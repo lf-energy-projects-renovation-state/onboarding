@@ -44,9 +44,7 @@ def check_repo_name_conflict():
 def fork_repo_and_clone_it_locally(owner: str, repo: str):
     subprocess.check_call(
         [
-            "gh", "repo", "fork", f"{owner}/{repo}",
-            "--org", TARGET_ORG,
-            "--clone", "--default-branch-only"
+            "git", "clone", f"https://github.com/{owner}/{repo}.git",
         ],
         cwd=local_fork_dir)
     print(f"Forked {owner}/{repo} successfully")
@@ -75,12 +73,12 @@ def generate_templated_files(owner: str, repo: str, upstream_default_branch_name
 
 def create_and_push_orphaned_sync_branch(owner: str, repo: str, upstream_default_branch_name: str):
     repo_dir = local_fork_dir / repo
-    subprocess.check_call(["git", "checkout", "--orphan", NEW_DEFAULT_BRANCH_NAME], cwd=repo_dir)
+    subprocess.check_call(["git", "checkout", NEW_DEFAULT_BRANCH_NAME], cwd=repo_dir)
     subprocess.check_call(["git", "rm", "-rf", "."], cwd=repo_dir)
     generate_templated_files(owner, repo, upstream_default_branch_name)
     subprocess.check_call(["git", "add", "."], cwd=repo_dir)
-    subprocess.check_call(["git", "commit", "-m", "Initial commit"], cwd=repo_dir)
-    subprocess.check_call(["git", "push", "-u", "origin", NEW_DEFAULT_BRANCH_NAME], cwd=repo_dir)
+    subprocess.check_call(["git", "commit", "-m", "Update configs"], cwd=repo_dir)
+    subprocess.check_call(["git", "push"], cwd=repo_dir)
 
 
 def change_default_branch(repo: str):
@@ -108,6 +106,14 @@ if __name__ == '__main__':
         cleanup_local_repo_clone(repo_name)
         fork_repo_and_clone_it_locally(owner, repo_name)
         default_branch_name = get_default_branch_name(repo_name)
+
+        cleanup_local_repo_clone(repo_name)
+        subprocess.check_call(
+            [
+                "git", "clone", f"https://github.com/{TARGET_ORG}/{repo_name}.git",
+            ],
+            cwd=local_fork_dir)
+
         create_and_push_orphaned_sync_branch(owner, repo_name, default_branch_name)
-        change_default_branch(repo_name)
-        enable_github_issues(repo_name)
+        # change_default_branch(repo_name)
+        # enable_github_issues(repo_name)
