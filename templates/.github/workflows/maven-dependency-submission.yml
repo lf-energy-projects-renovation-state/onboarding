@@ -1,0 +1,17 @@
+name: Submit Maven dependencies
+
+on:
+  push:
+    branches-ignore:
+      - "renovate-and-workflow-files"
+  workflow_dispatch:
+
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Submit Dependency Snapshot
+        uses: advanced-security/maven-dependency-submission-action@v4

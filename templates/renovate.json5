@@ -4,9 +4,9 @@
     "config:recommended",
     ":disableRateLimiting"
   ],
-  "labels": ["dependencies", "{{{manager}}}"],
+  "labels": ["dependencies", "depManager:{{{manager}}}"],
   "vulnerabilityAlerts": {
-    "labels": ["security", "dependencies", "{{{manager}}}"],
+    "labels": ["security", "dependencies", "depManager:{{{manager}}}"],
   },
   "baseBranches": ["###UPSTREAM_DEFAULT_BRANCH###"],
   "forkProcessing": "enabled"

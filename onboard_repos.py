@@ -1,33 +1,42 @@
 import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
+
+
+@dataclass
+class Repo:
+    owner_and_name: str
+    custom_workflows: Optional[list[str]]
+
 
 # Constants
 REPOS_TO_FORK = [
-    "sogno-platform/cimgen",
-    "sogno-platform/dpsim",
-    "PowerGridModel/power-grid-model-io",
-    "PowerGridModel/power-grid-model",
-    "com-pas/compas-open-scd",
-    "com-pas/compas-scl-auto-alignment",
-    "com-pas/compas-scl-data-service",
-    "com-pas/compas-core",
-    "com-pas/compas-sct",
-    "EVerest/everest-admin-panel",
-    "EVerest/EVerest",
-    "EVerest/everest-core",
-    "EVerest/libocpp",
-    "openeemeter/eemeter",
-    "seapath/meta-seapath"
+    Repo(owner_and_name="sogno-platform/cimgen", custom_workflows=[]),
+    Repo(owner_and_name="sogno-platform/dpsim", custom_workflows=[]),
+    Repo(owner_and_name="PowerGridModel/power-grid-model-io", custom_workflows=[]),
+    Repo(owner_and_name="PowerGridModel/power-grid-model", custom_workflows=[]),
+    Repo(owner_and_name="com-pas/compas-open-scd", custom_workflows=[]),
+    Repo(owner_and_name="com-pas/compas-scl-auto-alignment", custom_workflows=["maven-dependency-submission.yml"]),
+    Repo(owner_and_name="com-pas/compas-scl-data-service", custom_workflows=["maven-dependency-submission.yml"]),
+    Repo(owner_and_name="com-pas/compas-core", custom_workflows=["maven-dependency-submission.yml"]),
+    Repo(owner_and_name="com-pas/compas-sct", custom_workflows=["maven-dependency-submission.yml"]),
+    Repo(owner_and_name="EVerest/everest-admin-panel", custom_workflows=[]),
+    Repo(owner_and_name="EVerest/EVerest", custom_workflows=[]),
+    Repo(owner_and_name="EVerest/everest-core", custom_workflows=[]),
+    Repo(owner_and_name="EVerest/libocpp", custom_workflows=[]),
+    Repo(owner_and_name="openeemeter/eemeter", custom_workflows=[]),
+    Repo(owner_and_name="seapath/meta-seapath", custom_workflows=[])
 ]
 
-TARGET_ORG = "energy-projects-renovation-state"
+TARGET_ORG = "lf-energy-projects-renovation-state"
 """
 Name of the GitHub organization into which to fork the repositories.
 """
 
-NEW_DEFAULT_BRANCH_NAME = "sync-and-renovate-settings"
+CONFIGURATION_BRANCH_NAME = "renovate-and-workflow-files"
 
 local_fork_dir = Path.cwd() / "local-forks"
 
@@ -35,7 +44,7 @@ local_fork_dir = Path.cwd() / "local-forks"
 def check_repo_name_conflict():
     repo_names = set()
     for repo_to_fork in REPOS_TO_FORK:
-        _, repo_name = repo_to_fork.split('/')
+        _, repo_name = repo_to_fork.owner_and_name.split('/')
         if repo_name in repo_names:
             raise ValueError(f"Duplicate repo name: '{repo_name}'. Ensure that all repository names are unique.")
         repo_names.add(repo_name)
@@ -57,34 +66,44 @@ def get_default_branch_name(repo: str) -> str:
                                    cwd=local_fork_dir / repo).decode("utf-8").strip()
 
 
-def generate_templated_files(owner: str, repo: str, upstream_default_branch_name: str):
+def create_and_push_orphaned_configuration_branch(repo: str, custom_workflows: list[str]):
     repo_dir = local_fork_dir / repo
-
-    github_dir = repo_dir / ".github"
-    github_dir.mkdir()
-
-    for template_source, target_path in [("README.md", "README.md"), ("renovate.json5", "renovate.json5"),
-                                         ("pull.yml", ".github/pull.yml")]:
-        templated_content = (Path.cwd() / "templates" / template_source).read_text()
-        templated_content = templated_content.replace("###REPO_NAME###", repo)
-        templated_content = templated_content.replace("###OWNER###", owner)
-        templated_content = templated_content.replace("###UPSTREAM_DEFAULT_BRANCH###", upstream_default_branch_name)
-
-        (repo_dir / target_path).write_text(templated_content)
-
-
-def create_and_push_orphaned_sync_branch(owner: str, repo: str, upstream_default_branch_name: str):
-    repo_dir = local_fork_dir / repo
-    subprocess.check_call(["git", "checkout", "--orphan", NEW_DEFAULT_BRANCH_NAME], cwd=repo_dir)
+    subprocess.check_call(["git", "checkout", "--orphan", CONFIGURATION_BRANCH_NAME], cwd=repo_dir)
     subprocess.check_call(["git", "rm", "-rf", "."], cwd=repo_dir)
-    generate_templated_files(owner, repo, upstream_default_branch_name)
+
+    templates_dir = Path.cwd() / "templates"
+    shutil.copyfile(src=templates_dir / "renovate.json5", dst=repo_dir / "renovate.json5")
+    shutil.copyfile(src=templates_dir / "upstream_commit_hash", dst=repo_dir / "upstream_commit_hash")
+    workflows_dir = repo_dir / ".github" / "workflows"
+    workflows_dir.mkdir(parents=True, exist_ok=True)
+
+    workflows_to_copy = ["sync-fork.yml"]
+    workflows_to_copy.extend(custom_workflows)
+    for workflow_filename in workflows_to_copy:
+        shutil.copyfile(src=templates_dir / ".github" / "workflows" / workflow_filename,
+                        dst=workflows_dir / workflow_filename)
+
     subprocess.check_call(["git", "add", "."], cwd=repo_dir)
     subprocess.check_call(["git", "commit", "-m", "Initial commit"], cwd=repo_dir)
-    subprocess.check_call(["git", "push", "-u", "origin", NEW_DEFAULT_BRANCH_NAME], cwd=repo_dir)
+    subprocess.check_call(["git", "push", "-u", "origin", CONFIGURATION_BRANCH_NAME], cwd=repo_dir)
 
 
-def change_default_branch(repo: str):
-    subprocess.check_call(["gh", "repo", "edit", f"{TARGET_ORG}/{repo}", "--default-branch", NEW_DEFAULT_BRANCH_NAME])
+def set_up_and_trigger_sync_workflow(repo: str, default_branch_name: str):
+    repo_dir = local_fork_dir / repo
+    subprocess.check_call(["git", "checkout", default_branch_name], cwd=repo_dir)
+    destination_dir = repo_dir / ".github" / "workflows"
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    filename = "sync-fork.yml"
+    templates_dir = Path.cwd() / "templates"
+    shutil.copyfile(src=templates_dir / ".github" / "workflows" / filename, dst=destination_dir / filename)
+
+    subprocess.check_call(["git", "add", ".github"], cwd=repo_dir)
+    subprocess.check_call(["git", "commit", "-m", "Add sync workflow"], cwd=repo_dir)
+    subprocess.check_call(["git", "push"], cwd=repo_dir)
+    print(f"Pushed sync workflow for {repo}")
+    subprocess.check_call(["gh", "repo", "set-default", f"{TARGET_ORG}/{repo}"], cwd=repo_dir)
+    subprocess.check_call(["gh", "workflow", "run", "sync-fork.yml"], cwd=repo_dir)
+    print(f"Triggered sync workflow for {repo}")
 
 
 def enable_github_issues(repo: str):
@@ -104,10 +123,19 @@ def cleanup_local_repo_clone(repo: str):
 if __name__ == '__main__':
     check_repo_name_conflict()
     for repo_to_fork in REPOS_TO_FORK:
-        owner, repo_name = repo_to_fork.split('/')
+        owner, repo_name = repo_to_fork.owner_and_name.split('/')
         cleanup_local_repo_clone(repo_name)
         fork_repo_and_clone_it_locally(owner, repo_name)
         default_branch_name = get_default_branch_name(repo_name)
-        create_and_push_orphaned_sync_branch(owner, repo_name, default_branch_name)
-        change_default_branch(repo_name)
+        create_and_push_orphaned_configuration_branch(repo_name, repo_to_fork.custom_workflows)
+        set_up_and_trigger_sync_workflow(repo_name, default_branch_name)
         enable_github_issues(repo_name)
+
+    input("Please confirm once all the sync-fork workflows have completed")
+
+    for repo_to_fork in REPOS_TO_FORK:
+        if repo_to_fork.custom_workflows:
+            owner, repo_name = repo_to_fork.owner_and_name.split('/')
+            for custom_workflow in repo_to_fork.custom_workflows:
+                subprocess.check_call(["gh", "workflow", "run", custom_workflow], cwd=local_fork_dir / repo_name)
+                print(f"Triggered custom workflow {custom_workflow} for {repo_name}")

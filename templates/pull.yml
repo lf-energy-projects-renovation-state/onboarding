@@ -1,7 +1,0 @@
-# Configuration for https://github.com/wei/pull
-version: "1"
-rules:
-  - base: ###UPSTREAM_DEFAULT_BRANCH###
-    upstream: ###OWNER###:###UPSTREAM_DEFAULT_BRANCH###
-    mergeMethod: hardreset
-    mergeUnstable: true  # Merge PRs even if their GitHub Actions workflows are failing
