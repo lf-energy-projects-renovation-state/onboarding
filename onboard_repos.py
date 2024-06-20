@@ -97,7 +97,10 @@ def set_up_and_trigger_sync_workflow(repo: str, default_branch_name: str):
     templates_dir = Path.cwd() / "templates"
     shutil.copyfile(src=templates_dir / ".github" / "workflows" / filename, dst=destination_dir / filename)
 
-    subprocess.check_call(["git", "add", ".github"], cwd=repo_dir)
+    # Note: we add "--force" because some projects (e.g. eemeter) have a .gitignore file that is not tuned correctly,
+    # blocking the addition of the .github directory
+    # Error message (without --force): "The following paths are ignored by one of your .gitignore files: .github"
+    subprocess.check_call(["git", "add", "--force", ".github"], cwd=repo_dir)
     subprocess.check_call(["git", "commit", "-m", "Add sync workflow"], cwd=repo_dir)
     subprocess.check_call(["git", "push"], cwd=repo_dir)
     print(f"Pushed sync workflow for {repo}")
