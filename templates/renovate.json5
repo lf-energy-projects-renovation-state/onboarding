@@ -8,6 +8,5 @@
   "vulnerabilityAlerts": {
     "labels": ["security", "dependencies", "depManager:{{{manager}}}"],
   },
-  "baseBranches": ["###UPSTREAM_DEFAULT_BRANCH###"],
   "forkProcessing": "enabled"
 }
