@@ -65,7 +65,10 @@ jobs:
           fi
           
           git reset --hard upstream/${{ steps.upstream-repo-default-branch.outputs.result }}
+          # Enforce the usage of our own config (renovate.json5)
           git rm renovate.json* || true
+          # Avoid problems where an existing .gitignore file would prevent committing our configuration files
+          git rm .gitignore || true
           # Instead of using "cp -r", rsync allows us to exclude the .git directory
           rsync -av --exclude '.git' ../configuration/ .
           rm upstream_commit_hash
