@@ -14,21 +14,21 @@ class Repo:
 
 # Constants
 REPOS_TO_FORK = [
-    Repo(owner_and_name="sogno-platform/cimgen", custom_workflows=[]),
-    Repo(owner_and_name="sogno-platform/dpsim", custom_workflows=[]),
-    Repo(owner_and_name="PowerGridModel/power-grid-model-io", custom_workflows=[]),
-    Repo(owner_and_name="PowerGridModel/power-grid-model", custom_workflows=[]),
-    Repo(owner_and_name="com-pas/compas-open-scd", custom_workflows=[]),
+    Repo(owner_and_name="sogno-platform/cimgen", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="sogno-platform/dpsim", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="PowerGridModel/power-grid-model-io", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="PowerGridModel/power-grid-model", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="com-pas/compas-open-scd", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="com-pas/compas-scl-auto-alignment", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="com-pas/compas-scl-data-service", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="com-pas/compas-core", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="com-pas/compas-sct", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="EVerest/everest-admin-panel", custom_workflows=[]),
-    Repo(owner_and_name="EVerest/EVerest", custom_workflows=[]),
-    Repo(owner_and_name="EVerest/everest-core", custom_workflows=[]),
-    Repo(owner_and_name="EVerest/libocpp", custom_workflows=[]),
-    Repo(owner_and_name="openeemeter/eemeter", custom_workflows=[]),
-    Repo(owner_and_name="seapath/meta-seapath", custom_workflows=[])
+    Repo(owner_and_name="EVerest/everest-admin-panel", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="EVerest/EVerest", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="EVerest/everest-core", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="EVerest/libocpp", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="openeemeter/eemeter", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="seapath/meta-seapath", custom_workflows=["trivy-dependencies-submission.yml"])
 ]
 
 TARGET_ORG = "lf-energy-projects-renovation-state"
