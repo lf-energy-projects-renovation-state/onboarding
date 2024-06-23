@@ -11,7 +11,6 @@ class Repo:
     owner_and_name: str
     custom_workflows: Optional[list[str]]
 
-
 # Constants
 REPOS_TO_FORK = [
     Repo(owner_and_name="sogno-platform/cimgen", custom_workflows=["trivy-dependencies-submission.yml"]),
@@ -28,7 +27,24 @@ REPOS_TO_FORK = [
     Repo(owner_and_name="EVerest/everest-core", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="EVerest/libocpp", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="openeemeter/eemeter", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="seapath/meta-seapath", custom_workflows=["trivy-dependencies-submission.yml"])
+    Repo(owner_and_name="seapath/meta-seapath", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="sogno-platform/cimpy", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/powsybl-open-rao", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/powsybl-diagram", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/powsybl-core", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/pypowsybl", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/powsybl-network-store", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="powsybl/powsybl-open-loadflow", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="opfab/operatorfabric-core", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-coap-http-proxy", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-crest-device-service", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-crest-device-simulator", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/gxf-java-utilities", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/open-smart-grid-platform", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OSGP/Config", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="FlexMeasures/flexmeasures", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="FlexMeasures/flexmeasures-client", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="OpenSTEF/openstef", custom_workflows=["trivy-dependencies-submission.yml"])
 ]
 
 TARGET_ORG = "lf-energy-projects-renovation-state"
