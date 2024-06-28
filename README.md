@@ -11,9 +11,11 @@ This repo contains a [Python script](./onboard_repos.py) that forks a (possibly 
 1. If you are on Windows, run `git config --system core.longpaths true` once to avoid path length issues
 2. Create a (free) GitHub organization, and store its name in `TARGET_ORG` in the `onboard_repos.py` script
 3. In the settings page of your GitHub organization
-   * in the **Actions -> General** section, in the **Workflow permissions** subsection, change the permission to _Read and write permissions_ and click **Save** (we do this so that sync workflow can use the `secrets.GITHUB_TOKEN` to push changes to the fork)
+   * in the **Secrets and variables -> Actions** section, create a new organization secret named `GH_PAT` and set it to the value of a (classic) PAT that has the `repo` and `workflow` scopes (we do this so that the sync workflow can push changes to the fork)
    * in the **Code security -> Configurations** section, create a new configuration which enables the **dependency graph** and **dependabot (alerts)**. In the **Policy** section, set _Use as default for newly created repositories_ to any value other than _None_ (we do this so that the forks have the dependency graph enabled right after creating them, which would otherwise have to be done manually)
 4. Configure the repositories you want to fork in the `REPOS_TO_FORK` list in the `onboard_repos.py` script
 5. Make sure that the GitHub CLI is installed and authenticated
 6. Run the `onboard_repos.py` script with a Python 3.10+ interpreter
 7. Open https://github.com/apps/renovate and install the Renovate bot to the organization you created in step 1. Make sure that you explicitly specify the list of all the repos in your organization. Granting Renovate access to _all_ repositories won't work.
+
+In case you decide to change some of the files in the `templates` folder _after_ having run the `onboard_repos.py` script, you can run the `change_files_in_repos.py` script.
