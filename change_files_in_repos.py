@@ -18,6 +18,9 @@ if __name__ == '__main__':
             subprocess.check_call(["git", "clone", f"https://github.com/{TARGET_ORG}/{repo}.git"],
                                   cwd=local_fork_dir)
 
+        default_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                                                 cwd=repo_dir).decode("utf-8").strip()
+
         subprocess.check_call(["git", "checkout", CONFIGURATION_BRANCH_NAME], cwd=repo_dir)
         # The sync workflow might have changed files, so we need to update our (possibly stale) local clone
         subprocess.check_call(["git", "pull"], cwd=repo_dir)
@@ -37,3 +40,4 @@ if __name__ == '__main__':
         subprocess.check_call(["git", "add", "."], cwd=repo_dir)
         subprocess.check_call(["git", "commit", "-m", "Update configuration files"], cwd=repo_dir)
         subprocess.check_call(["git", "push", "-u", "origin", CONFIGURATION_BRANCH_NAME], cwd=repo_dir)
+        subprocess.check_call(["git", "checkout", default_branch], cwd=repo_dir)
