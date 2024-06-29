@@ -11,6 +11,7 @@ class Repo:
     owner_and_name: str
     custom_workflows: Optional[list[str]]
 
+
 # Constants
 REPOS_TO_FORK = [
     Repo(owner_and_name="sogno-platform/cimgen", custom_workflows=["trivy-dependencies-submission.yml"]),
@@ -35,11 +36,16 @@ REPOS_TO_FORK = [
     Repo(owner_and_name="powsybl/pypowsybl", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="powsybl/powsybl-network-store", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="powsybl/powsybl-open-loadflow", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="opfab/operatorfabric-core", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="OSGP/sng-coap-http-proxy", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="OSGP/sng-crest-device-service", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="OSGP/sng-crest-device-simulator", custom_workflows=["trivy-dependencies-submission.yml"]),
-    Repo(owner_and_name="OSGP/gxf-java-utilities", custom_workflows=["trivy-dependencies-submission.yml"]),
+    Repo(owner_and_name="opfab/operatorfabric-core",
+         custom_workflows=["trivy-dependencies-submission.yml", "gradle-dependency-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-coap-http-proxy",
+         custom_workflows=["trivy-dependencies-submission.yml", "gradle-dependency-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-crest-device-service",
+         custom_workflows=["trivy-dependencies-submission.yml", "gradle-dependency-submission.yml"]),
+    Repo(owner_and_name="OSGP/sng-crest-device-simulator",
+         custom_workflows=["trivy-dependencies-submission.yml", "gradle-dependency-submission.yml"]),
+    Repo(owner_and_name="OSGP/gxf-java-utilities",
+         custom_workflows=["trivy-dependencies-submission.yml", "gradle-dependency-submission.yml"]),
     Repo(owner_and_name="OSGP/open-smart-grid-platform", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="OSGP/Config", custom_workflows=["trivy-dependencies-submission.yml"]),
     Repo(owner_and_name="FlexMeasures/flexmeasures", custom_workflows=["trivy-dependencies-submission.yml"]),
