@@ -18,4 +18,7 @@ This repo contains a [Python script](./onboard_repos.py) that forks a (possibly 
 6. Run the `onboard_repos.py` script with a Python 3.10+ interpreter
 7. Open https://github.com/apps/renovate and install the Renovate bot to the organization you created in step 1. Make sure that you explicitly specify the list of all the repos in your organization. Granting Renovate access to _all_ repositories won't work.
 
-In case you decide to change some of the files in the `templates` folder _after_ having run the `onboard_repos.py` script, you can run the `change_files_in_repos.py` script.
+## Other scripts
+- To update / push some of the files in the `templates` folder that you changed locally _after_ you ran the `onboard_repos.py` script, run the `change_files_in_repos.py` script
+- To determine which of the repositories in the `REPOS_TO_FORK` list have the Renovate bot or Dependabot installed, run the `check_renovate_or_dependabot.py` script
+- To determine the _current_ state of Dependabot alerts vs. Renovate PRs, run the `compare_vulnerabilities.py` script
