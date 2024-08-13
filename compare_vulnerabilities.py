@@ -1,6 +1,6 @@
 """
 Produces a CSV file of the following form:
-<owner-and-repo-name>,<dependabot-vulnerabilities>,<renovate-prs-with-vulnerabilities>,<renovate-prs-without-vulnerabilities>
+<owner-and-repo-name>;<dependabot-vulnerabilities>;<renovate-prs-with-vulnerabilities>;<renovate-prs-without-vulnerabilities>
 
 The motivation is to determine how much higher the number of Dependabot alerts is, compared to security-related Renovate PRs
 (in our forks).
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     github_client.get_user()  # check the PAT for validity
 
     with open("vulnerability_comparison.csv", "w") as f:
-        f.write("Repo,Dependabot vulnerabilities,Renovate PRs with vulnerabilities,Renovate PRS without vulnerabilities\n")
+        f.write("Repo;Dependabot vulnerabilities;Renovate PRs with vulnerabilities;Renovate PRs without vulnerabilities\n")
 
         for forked_repo in REPOS_TO_FORK:
             _, repo_name = forked_repo.owner_and_name.split('/')
@@ -57,4 +57,4 @@ if __name__ == '__main__':
             renovate_prs_with_vulnerabilities = get_renovate_prs_with_vulnerabilities(renovate_prs)
             renovate_prs_without_vulnerabilities = len(renovate_prs) - renovate_prs_with_vulnerabilities
 
-            f.write(f"{forked_repo.owner_and_name},{dependabot_alerts},{renovate_prs_with_vulnerabilities},{renovate_prs_without_vulnerabilities}\n")
+            f.write(f"{forked_repo.owner_and_name};{dependabot_alerts};{renovate_prs_with_vulnerabilities};{renovate_prs_without_vulnerabilities}\n")
