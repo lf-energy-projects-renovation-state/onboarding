@@ -45,8 +45,14 @@ if __name__ == '__main__':
     for forked_repo in REPOS_TO_FORK:
         default_branch = get_default_branch_name(github_client, forked_repo.owner_and_name)
 
-        if has_dependabot_config(github_client, forked_repo.owner_and_name):
-            print(f"Dependabot enabled for {forked_repo.owner_and_name}")
+        has_dependabot = has_dependabot_config(github_client, forked_repo.owner_and_name)
 
-        if has_renovate_config(github_client, forked_repo.owner_and_name):
-            print(f"Renovate enabled for {forked_repo.owner_and_name}")
+        has_renovate = has_renovate_config(github_client, forked_repo.owner_and_name)
+
+        state = "none"
+        if has_renovate:
+            state = "renovate"
+        elif has_dependabot:
+            state = "dependabot"
+
+        print(f"{forked_repo.owner_and_name}: {state}")
